@@ -6,28 +6,79 @@ interface CardProps {
   hover?: boolean;
   variant?: 'default' | 'glass' | 'gradient';
   animate?: boolean;
+  onClick?: () => void;
 }
 
 const Card: React.FC<CardProps> = ({ 
   children, 
   className = '', 
-  hover = false, 
+  hover = true, 
   variant = 'default',
-  animate = false 
+  animate = false,
+  onClick
 }) => {
-  const baseClasses = 'rounded-lg transition-all-smooth';
+  const baseClasses = 'rounded-2xl transition-all duration-300';
   
   const variantClasses = {
-    default: 'bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700',
-    glass: 'glass shadow-lg',
-    gradient: 'gradient-primary text-white shadow-lg'
+    default: 'bg-white/90 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl',
+    glass: 'glass shadow-xl border border-white/30',
+    gradient: 'gradient-primary text-white shadow-xl'
   };
   
-  const hoverClasses = hover ? 'hover-lift hover:shadow-lg cursor-pointer transform' : '';
-  const animateClasses = animate ? 'animate-fade-in-up' : '';
+  const hoverClasses = hover ? 'hover-lift cursor-pointer transform hover:scale-[1.02]' : '';
+  const animateClasses = animate ? 'animate-scaleIn' : '';
+  
+  const classes = [baseClasses, variantClasses[variant], hoverClasses, animateClasses, className]
+    .filter(Boolean)
+    .join(' ');
   
   return (
-    <div className={`${baseClasses} ${variantClasses[variant]} ${hoverClasses} ${animateClasses} ${className}`}>
+    <div className={classes} onClick={onClick}>
+      {children}
+    </div>
+  );
+};
+
+interface CardHeaderProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardHeader: React.FC<CardHeaderProps> = ({ children, className = '' }) => {
+  const classes = ['px-6 py-4 border-b border-white/20', className].filter(Boolean).join(' ');
+  
+  return (
+    <div className={classes}>
+      {children}
+    </div>
+  );
+};
+
+interface CardContentProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardContent: React.FC<CardContentProps> = ({ children, className = '' }) => {
+  const classes = ['px-6 py-4', className].filter(Boolean).join(' ');
+  
+  return (
+    <div className={classes}>
+      {children}
+    </div>
+  );
+};
+
+interface CardFooterProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardFooter: React.FC<CardFooterProps> = ({ children, className = '' }) => {
+  const classes = ['px-6 py-4 border-t border-white/20', className].filter(Boolean).join(' ');
+  
+  return (
+    <div className={classes}>
       {children}
     </div>
   );
